@@ -17,7 +17,7 @@
 //  2, static member function;
 //  3, member function mocker that can check this pointer.
 //  4, virtual member function mocker that can check this pointer.
-#define CREATE_MOCKER(function) ::CppFreeMock::MockerCreator::GetMocker<::CppFreeMock::TypeForUniqMocker<__COUNTER_>>(function, reinterpret_cast<void*>(function), #function)
+#define CREATE_MOCKER(function) ::CppFreeMock::MockerCreator::GetMocker<::CppFreeMock::TypeForUniqMocker<__COUNTER__>>(function, reinterpret_cast<void*>(function), #function)
 #define CLEAR_MOCKERS ::CppFreeMock::MockerCreator::RestoreAllMockerFunctionToReal
 
 // Used in EXPECT_CALL(*mocker, MOCK_FUNCTION(_))
