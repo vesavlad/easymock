@@ -86,7 +86,7 @@ namespace CppFreeMock
                 gmocker.RegisterOwner(this);
                 return gmocker.With(p ...);
             }
-
+            virtual void enable() = 0;
             virtual void disable() = 0;
 
             mutable ::testing::FunctionMocker<R(P...)> gmocker;
@@ -113,6 +113,14 @@ namespace CppFreeMock
 
             virtual ~Mocker() {
                 disable();
+            }
+
+            void enable(){
+                if(!SimpleSingleton<decltype(this)>::getInstance())
+                {
+                    SimpleSingleton<decltype(this)>::getInstance() = this;
+                    RuntimePatcher::GraftFunction(originFunctionAddress, MockerEntryPoint<IntegrateType>::EntryPoint, MockerBase<FunctionType>::binaryBackup);
+                }
             }
 
             void disable() {
@@ -143,6 +151,13 @@ namespace CppFreeMock
             virtual ~Mocker() \
             { \
                 disable(); \
+            } \
+            virtual void enable() \
+            { \
+                if(!SimpleSingleton<decltype(this)>::getInstance()) { \
+                    SimpleSingleton<decltype(this)>::getInstance() = this; \
+                    RuntimePatcher::GraftFunction(originFunctionAddress, &MockerEntryPoint<EntryPointType>::EntryPoint, MockerBase<StubFunctionType>::binaryBackup); \
+                } \
             } \
             virtual void disable() \
             { \
