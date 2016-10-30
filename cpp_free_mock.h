@@ -19,9 +19,6 @@
 #define MOCKER(function) \
     MOCKER_INTERNAL(function, __COUNTER__)
 
-#define MOCKER_VIRTUAL(function) \
-    MOCKER_VIRTUAL_INTERNAL(function, __COUNTER__)
-
 #define CLEAR_MOCKER ::CppFreeMock::MockerCreator::RestoreAllMockerFunctionToReal
 
 // Used in EXPECT_CALL(*mocker, MOCK_FUNCTION(_))

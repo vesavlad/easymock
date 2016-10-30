@@ -12,14 +12,14 @@
 
 namespace CppFreeMock {
 
-namespace RuntimePatcherImpl {
-    // Need impl in architecture relevant file.
-    // OS
-    static int UnprotectMemoryForOnePage(void* const address);
-    // CPU
-    static int SetJump(void* const address, const void* const destination, std::vector<char>& binary_backup);
-    static void RevertJump(void* address, const std::vector<char>& binary_backup);
-}
+    namespace RuntimePatcherImpl {
+        // Need impl in architecture relevant file.
+        // OS
+        static int UnprotectMemoryForOnePage(void* const address);
+        // CPU
+        static int SetJump(void* const address, const void* const destination, std::vector<char>& binary_backup);
+        static void RevertJump(void* address, const std::vector<char>& binary_backup);
+    }
 
 } // namespace CppFreeMock
 
@@ -35,24 +35,23 @@ namespace RuntimePatcherImpl {
 
 namespace CppFreeMock {
 
-// Provide 2 interface, GraftFunction and RevertGraft.
-struct RuntimePatcher {
-    template < typename F1, typename F2 >
-    static int GraftFunction(F1 address, F2 destination, std::vector<char>& binary_backup) {
-        void* function = reinterpret_cast<void*>((std::size_t&)address);
-        if (0 != RuntimePatcherImpl::UnprotectMemoryForOnePage(function)) {
-            std::abort();
-        } else {
-            // For mock std::abort, this need not after the 'if'.
-            return RuntimePatcherImpl::SetJump(function, reinterpret_cast<void*>((std::size_t&)destination), binary_backup);
+    // Provide 2 interface, GraftFunction and RevertGraft.
+    struct RuntimePatcher
+    {
+        template <typename F >
+        static int GraftFunction(void* address, F destination, std::vector<char>& binary_backup) {
+            if (0 != RuntimePatcherImpl::UnprotectMemoryForOnePage(address)) {
+                std::abort();
+            } else {
+                // For mock std::abort, this need not after the 'if'.
+                return RuntimePatcherImpl::SetJump(address, reinterpret_cast<void*>((std::size_t&)destination), binary_backup);
+            }
         }
-    }
 
-    template < typename F >
-    static void RevertGraft(F address, const std::vector<char>& binary_backup) {
-        RuntimePatcherImpl::RevertJump(reinterpret_cast<void*>((std::size_t&)address), binary_backup);
-    }
-};
+        static void RevertGraft(void* address, const std::vector<char>& binary_backup) {
+            RuntimePatcherImpl::RevertJump(address, binary_backup);
+        }
+    };
 
 } // namespace CppFreeMock
 

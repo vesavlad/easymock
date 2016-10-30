@@ -8,8 +8,6 @@
 #ifndef CPP_FREE_MOCK_CPP11_IMPL_H_
 #define CPP_FREE_MOCK_CPP11_IMPL_H_
 
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
 
 #include "cpp11/basic_type.h"
 
@@ -96,30 +94,34 @@ namespace CppFreeMock
             const std::string functionName;
     };
 
+
+
     template < typename I, typename R, typename ... P>
-    class Mocker<I(R(P ...))> : MockerBase<R(P ...)>
+    struct Mocker<I(R(P ...))> : MockerBase<R(P ...)>
     {
         public:
             typedef I IntegrateType(R(P ...));
             typedef R FunctionType(P ...);
-            Mocker(FunctionType function, const std::string& functionName):
+            Mocker(FunctionType function, void* functionAddress, const std::string& functionName):
                 MockerBase<FunctionType>(functionName),
-                originFunction(function)
+                originFunction(function),
+                originFunctionAddress(functionAddress)
             {
                 SimpleSingleton<decltype(this)>::getInstance() = this;
-                RuntimePatcher::GraftFunction(originFunction, MockerEntryPoint<IntegrateType>::EntryPoint, MockerBase<FunctionType>::binaryBackup);
+                RuntimePatcher::GraftFunction(originFunctionAddress, MockerEntryPoint<IntegrateType>::EntryPoint, MockerBase<FunctionType>::binaryBackup);
             }
 
             virtual ~Mocker() {
                 RestoreToReal();
             }
 
-            void RestoreToReal() {
-                RuntimePatcher::RevertGraft(originFunction, MockerBase<FunctionType>::binaryBackup);
+            void disable() {
+                RuntimePatcher::RevertGraft(originFunctionAddress, MockerBase<FunctionType>::binaryBackup);
                 SimpleSingleton<decltype(this)>::getInstance() = nullptr;
             }
 
             FunctionType* originFunction;
+            void* originFunctionAddress;
     };
 
     #define MOCKER_WITH_THIS_POINTER_CHECK(constness) \
@@ -130,11 +132,13 @@ namespace CppFreeMock
             typedef I EntryPointType(R(C::*)(P ...) constness); \
             typedef R (C::*FunctionType)(P ...) constness; \
             typedef R StubFunctionType(const void*, P ...); \
-            Mocker(FunctionType function, const std::string& functionName): \
-                MockerBase<StubFunctionType>(functionName), originFunction(function) \
+            Mocker(FunctionType function, void* functionAddress, const std::string& functionName): \
+                MockerBase<StubFunctionType>(functionName), \
+                originFunction(function), \
+                originFunctionAddress(functionAddress)\
             { \
                 SimpleSingleton<decltype(this)>::getInstance() = this; \
-                RuntimePatcher::GraftFunction(originFunction, &MockerEntryPoint<EntryPointType>::EntryPoint, MockerBase<StubFunctionType>::binaryBackup); \
+                RuntimePatcher::GraftFunction(originFunctionAddress, &MockerEntryPoint<EntryPointType>::EntryPoint, MockerBase<StubFunctionType>::binaryBackup); \
             } \
             virtual ~Mocker() \
             { \
@@ -142,10 +146,11 @@ namespace CppFreeMock
             } \
             virtual void RestoreToReal() \
             { \
-                RuntimePatcher::RevertGraft(originFunction, MockerBase<StubFunctionType>::binaryBackup); \
+                RuntimePatcher::RevertGraft(originFunctionAddress, MockerBase<StubFunctionType>::binaryBackup); \
                 SimpleSingleton<decltype(this)>::getInstance() = nullptr; \
             } \
             FunctionType originFunction; \
+            void* originFunctionAddress; \
         }
 
     MOCKER_WITH_THIS_POINTER_CHECK(const);
@@ -179,18 +184,18 @@ namespace CppFreeMock
 
             template < typename I, typename R, typename ... P >
             static const std::shared_ptr<MockerBase<R(P ...)>>
-            CreateMocker(R function(P ...), const std::string& functionName)
+            CreateMocker(R function(P ...), void* functionAddress, const std::string& functionName)
             {
-                return std::shared_ptr<MockerBase<R(P ...)>>(new Mocker<I(R(P ...))>(function, functionName));
+                return std::shared_ptr<MockerBase<R(P ...)>>(new Mocker<I(R(P ...))>(function, functionAddress, functionName));
             }
 
             #define CREATE_MOCKER_WITH_THIR_POINTER_CHECK(constness) \
                 template < typename I, typename C, typename R, typename ... P > \
                 static const std::shared_ptr<MockerBase<R(const void*, P ...)>> \
-                CreateMocker(R (C::*function)(P ...) constness, const std::string& functionName) \
+                CreateMocker(R (C::*function)(P ...) constness, void* functionAddress, const std::string& functionName) \
                 { \
                     typedef I IntegrateType(R(C::*)(const void*, P ...) constness); \
-                    return std::shared_ptr<MockerBase<R(const void*, P ...)>>(new Mocker<IntegrateType>(function, functionName)); \
+                    return std::shared_ptr<MockerBase<R(const void*, P ...)>>(new Mocker<IntegrateType>(function, functionAddress, functionName)); \
                 }
 
             CREATE_MOCKER_WITH_THIR_POINTER_CHECK(const)
@@ -199,10 +204,11 @@ namespace CppFreeMock
 
             template < typename I, typename M, typename F>
             static const std::shared_ptr<M>
-            DoGetMocker(F function, const std::string& functionName, const bool& isVirtual = false)
+            DoGetMocker(F function, void* functionAddress, const std::string& functionName)
             {
                 typedef MockerCache<M> MockerCacheType;
-                const void* address = reinterpret_cast<const void*>((std::size_t&)function);
+                const void* address = reinterpret_cast<const void*>(functionAddress);
+
                 auto got = MockerCacheType::getInstance().find(address);
                 if (got != MockerCacheType::getInstance().end())
                 {
@@ -211,28 +217,25 @@ namespace CppFreeMock
                 else
                 {
                     SimpleSingleton<RestoreFunctions>::getInstance().push_back(std::bind(MockerCacheType::RestoreCachedMockFunctionToReal));
-                    MockerCacheType::getInstance().insert({{address, CreateMocker<I>(function, functionName)}});
-                    return DoGetMocker<I, M>(function, functionName, isVirtual);
+                    MockerCacheType::getInstance().insert({{address, CreateMocker<I>(function, functionAddress, functionName)}});
+                    return DoGetMocker<I, M>(function, functionAddress, functionName);
                 }
             }
 
         public:
             template < typename I, typename R, typename ... P >
             static const std::shared_ptr<MockerBase<R(P ...)>>
-            GetMocker(R function(P ...), const std::string& functionName, const bool& isVirtual = false)
+            GetMocker(R function(P ...), void* functionAddress, const std::string& functionName)
             {
-                printf("Address of mocked function %s = [%p]\n", functionName.c_str(), (void*)(function));
-                return DoGetMocker<I, MockerBase<R(P ...)>>(function,functionName, isVirtual);
+                return DoGetMocker<I, MockerBase<R(P ...)>>(function, functionAddress, functionName);
             }
 
             #define GET_MOCKER_WITH_THIR_POINTER_CHECK(constness) \
                 template < typename I, typename C, typename R, typename ... P > \
                 static std::shared_ptr<MockerBase<R(const void*, P ...)>> \
-                GetMocker(R (C::*function)(P ...) constness, const std::string& functionName, const bool& isVirtual = false) \
+                GetMocker(R (C::*function)(P ...) constness, void* functionAddress, const std::string& functionName) \
                 { \
-                        C obj; \
-                        printf("Address of mocked method %s = [%p]\n", functionName.c_str(), (void*)(C().*function)); \
-                    return DoGetMocker<I, MockerBase<R(const void*, P ...)>>(function, functionName, isVirtual); \
+                    return DoGetMocker<I, MockerBase<R(const void*, P ...)>>(function, functionAddress, functionName); \
                 }
 
             GET_MOCKER_WITH_THIR_POINTER_CHECK(const)
