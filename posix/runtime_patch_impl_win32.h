@@ -1,7 +1,7 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2014 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
 // Implement CppFreeMock::RuntimePatcherImpl::UnprotectMemory in win32.
 
