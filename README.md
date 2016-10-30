@@ -23,4 +23,4 @@ TEST(HelloWorld, First) {
 }
 ```
 
-For metho info check the [wiki](https://github.com/vesavlad/easymock/wiki)
+For more info check the [wiki](https://github.com/vesavlad/easymock/wiki)
