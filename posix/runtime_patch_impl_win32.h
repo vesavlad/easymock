@@ -40,7 +40,7 @@ extern "C" {
 
 } // extern "C"
 
-#include <stdlib.h>
+#include <iostream>
 #include <cerrno>
 #include <unistd.h>
 
