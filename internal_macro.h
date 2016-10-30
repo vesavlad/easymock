@@ -12,5 +12,8 @@
 
 #define MOCKER_INTERNAL(function, identity) \
     ::CppFreeMock::MockerCreator::GetMocker<::CppFreeMock::TypeForUniqMocker<identity>>(function, #function)
+    
+#define MOCKER_VIRTUAL_INTERNAL(function, identity) \
+    ::CppFreeMock::MockerCreator::GetMocker<::CppFreeMock::TypeForUniqMocker<identity>>(function, #function, true)
 
 #endif // CPP_FREE_MOCK_INTERNAL_MACRO_H_

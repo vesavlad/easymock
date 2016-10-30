@@ -8,27 +8,28 @@
 #ifndef CPP_FREE_MOCK_CPP11_BASIC_TYPE_H_
 #define CPP_FREE_MOCK_CPP11_BASIC_TYPE_H_
 
-namespace CppFreeMock {
+namespace CppFreeMock
+{
 
-template < int uniq >
-struct TypeForUniqMocker { };
+    template < int uniq >
+    struct TypeForUniqMocker { };
 
-template < typename T >
-struct MockerBase { };
+    template < typename T >
+    struct MockerBase { };
 
-template < typename T >
-struct Mocker : public MockerBase<T> { };
+    template < typename T >
+    struct Mocker : public MockerBase<T> { };
 
-template < typename T >
-class MockerEntryPoint { };
+    template < typename T >
+    class MockerEntryPoint { };
 
-template < typename T >
-struct SimpleSingleton {
-    static T& getInstance() {
-        static T value;
-        return value;
-    }
-};
+    template < typename T >
+    struct SimpleSingleton {
+        static T& getInstance() {
+            static T value;
+            return value;
+        }
+    };
 
 } // namespace CppFreeMock
 
