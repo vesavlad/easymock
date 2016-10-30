@@ -1,4 +1,4 @@
-// Copyright 2014 Vlad Vesa
+// Copyright 2016 Vlad Vesa
 // Author: hello@vladvesa.ro (Vlad Vesa)
 
 // EasyMock: a tool for mock global function, member function, class static function, virtual member function.
