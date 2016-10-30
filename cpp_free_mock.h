@@ -1,7 +1,7 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2016 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
 // This file contains user level macro.
 // User can only use the symbols in this file.
@@ -19,9 +19,9 @@
 #define MOCKER(function) \
     MOCKER_INTERNAL(function, __COUNTER__)
 
-#define CLEAR_MOCKER ::CppFreeMock::MockerCreator::RestoreAllMockerFunctionToReal
+#define CLEAR_MOCKER ::EasyMock::MockerCreator::RestoreAllMockerFunctionToReal
 
 // Used in EXPECT_CALL(*mocker, MOCK_FUNCTION(_))
-#define MOCK_FUNCTION CppFreeMockStubFunction
+#define MOCK_FUNCTION EasyMockStubFunction
 
 #endif // CPP_FREE_MOCK_CPP_FREE_MOCK_H_

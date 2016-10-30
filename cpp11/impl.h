@@ -1,13 +1,12 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2016 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
 // Implement under c++11.
 
-#ifndef CPP_FREE_MOCK_CPP11_IMPL_H_
-#define CPP_FREE_MOCK_CPP11_IMPL_H_
-
+#ifndef EASYMOCK_CPP11_IMPL_H_
+#define EASYMOCK_CPP11_IMPL_H_
 
 #include "cpp11/basic_type.h"
 
@@ -19,7 +18,7 @@
 #include <vector>
 // I don't include gmock and gtest file here, because maybe you have you own include patch.
 
-namespace CppFreeMock
+namespace EasyMock
 {
 
     // How it works:
@@ -45,7 +44,7 @@ namespace CppFreeMock
         friend class Mocker<IntegrateType>;
         static R EntryPoint(P... p)
         {
-            return SimpleSingleton<Mocker<IntegrateType>*>::getInstance()->CppFreeMockStubFunction(p ...);
+            return SimpleSingleton<Mocker<IntegrateType>*>::getInstance()->EasyMockStubFunction(p ...);
         }
     };
 
@@ -57,7 +56,7 @@ namespace CppFreeMock
         friend class Mocker<IntegrateType>; \
         R EntryPoint(P... p) \
         { \
-            return SimpleSingleton<Mocker<IntegrateType>*>::getInstance()->CppFreeMockStubFunction(this, p ...); \
+            return SimpleSingleton<Mocker<IntegrateType>*>::getInstance()->EasyMockStubFunction(this, p ...); \
         } \
     }
 
@@ -74,14 +73,14 @@ namespace CppFreeMock
             MockerBase(const std::string& _functionName): functionName(_functionName) {}
             virtual ~MockerBase() {}
 
-            // Use 'CppFreeMockStubFunction' as the function name for EXPECT_CALL.
-            R CppFreeMockStubFunction(P... p)
+            // Use 'EasyMockStubFunction' as the function name for EXPECT_CALL.
+            R EasyMockStubFunction(P... p)
             {
                 gmocker.SetOwnerAndName(this, functionName.c_str());
                 return gmocker.Invoke(p ...);
             }
 
-            ::testing::MockSpec<R(P...)>& gmock_CppFreeMockStubFunction(const ::testing::Matcher<P>&... p)
+            ::testing::MockSpec<R(P...)>& gmock_EasyMockStubFunction(const ::testing::Matcher<P>&... p)
             {
                 gmocker.RegisterOwner(this);
                 return gmocker.With(p ...);
@@ -267,6 +266,6 @@ namespace CppFreeMock
             }
     };
 
-} // namespace CppFreeMock
+} // namespace EasyMock
 
-#endif // CPP_FREE_MOCK_CPP11_IMPL_H_
+#endif // EASYMOCK_CPP11_IMPL_H_

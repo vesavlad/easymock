@@ -17,13 +17,13 @@
 //  2, static member function;
 //  3, member function mocker that can check this pointer.
 //  4, virtual member function mocker that can check this pointer.
-#define CREATE_MOCKER(function) ::CppFreeMock::MockerCreator::GetMocker<::CppFreeMock::TypeForUniqMocker<__COUNTER__>>(function, reinterpret_cast<void*>(function), #function)
+#define CREATE_MOCKER(function) ::EasyMock::MockerCreator::GetMocker<::EasyMock::TypeForUniqMocker<__COUNTER__>>(function, reinterpret_cast<void*>(function), #function)
 #define DISABLE_MOCKER(mocker) assert(mocker!=nullptr); mocker->disable()
 #define ENABLE_MOCKER(mocker) assert(mocker!=nullptr); mocker->enable()
 #define CLEAR_MOCKER(mocker) assert(mocker!=nullptr); mocker->disable()
-#define CLEAR_MOCKERS ::CppFreeMock::MockerCreator::RestoreAllMockerFunctionToReal
+#define CLEAR_MOCKERS ::EasyMock::MockerCreator::RestoreAllMockerFunctionToReal
 
 // Used in EXPECT_CALL(*mocker, MOCK_FUNCTION(_))
-#define MOCK_FUNCTION CppFreeMockStubFunction
+#define MOCK_FUNCTION EasyMockStubFunction
 
 #endif // EASY_MOCK_H_

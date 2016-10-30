@@ -1,16 +1,16 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2016 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
 // Check os and include the special implement.
 
-#ifndef CPP_FREE_MOCK_RUNTIME_PATCH_H_
-#define CPP_FREE_MOCK_RUNTIME_PATCH_H_
+#ifndef EASYMOCK_RUNTIME_PATCH_H_
+#define EASYMOCK_RUNTIME_PATCH_H_
 
 #include <vector>
 
-namespace CppFreeMock {
+namespace EasyMock {
 
     namespace RuntimePatcherImpl {
         // Need impl in architecture relevant file.
@@ -21,7 +21,7 @@ namespace CppFreeMock {
         static void RevertJump(void* address, const std::vector<char>& binary_backup);
     }
 
-} // namespace CppFreeMock
+} // namespace EasyMock
 
 #if defined(__x86_64__) || defined(__i386__)
 #include "x86/runtime_patch_impl.h"
@@ -35,7 +35,7 @@ namespace CppFreeMock {
 #include "posix/runtime_patch_impl_win32.h"
 #endif
 
-namespace CppFreeMock {
+namespace EasyMock {
 
     // Provide 2 interface, GraftFunction and RevertGraft.
     struct RuntimePatcher
@@ -55,6 +55,6 @@ namespace CppFreeMock {
         }
     };
 
-} // namespace CppFreeMock
+} // namespace EasyMock
 
-#endif // CPP_FREE_MOCK_RUNTIME_PATCH_H_
+#endif // EASYMOCK_RUNTIME_PATCH_H_

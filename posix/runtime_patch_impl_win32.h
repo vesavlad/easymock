@@ -3,10 +3,10 @@
 
 // EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
-// Implement CppFreeMock::RuntimePatcherImpl::UnprotectMemory in win32.
+// Implement EasyMock::RuntimePatcherImpl::UnprotectMemory in win32.
 
-#ifndef CPP_FREE_MOCK_POSIX_RUNTIME_PATCH_IMPL_H_
-#define CPP_FREE_MOCK_POSIX_RUNTIME_PATCH_IMPL_H_
+#ifndef EASYMOCK_POSIX_RUNTIME_PATCH_IMPL_WIN32_H_
+#define EASYMOCK_POSIX_RUNTIME_PATCH_IMPL_WIN32_H_
 
 #include <windows.h>
 
@@ -45,7 +45,7 @@ extern "C" {
 #include <unistd.h>
 
 
-namespace CppFreeMock {
+namespace EasyMock {
     namespace RuntimePatcherImpl {
         // To be simple, I don't create .cpp for this static value, so you can't include this file in 2 or more cpp file.
 
@@ -74,6 +74,6 @@ namespace CppFreeMock {
         }
     }
 
-} // namespace CppFreeMock
+} // namespace EasyMock
 
-#endif // CPP_FREE_MOCK_POSIX_RUNTIME_PATCH_IMPL_H_
+#endif // EASYMOCK_POSIX_RUNTIME_PATCH_IMPL_WIN32_H_

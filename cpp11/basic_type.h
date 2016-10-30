@@ -1,14 +1,14 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2016 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
 // Basic template type, must be specialization.
 
-#ifndef CPP_FREE_MOCK_CPP11_BASIC_TYPE_H_
-#define CPP_FREE_MOCK_CPP11_BASIC_TYPE_H_
+#ifndef EASYMOCK_CPP11_BASIC_TYPE_H_
+#define EASYMOCK_CPP11_BASIC_TYPE_H_
 
-namespace CppFreeMock
+namespace EasyMock
 {
 
     template < int uniq >
@@ -31,6 +31,6 @@ namespace CppFreeMock
         }
     };
 
-} // namespace CppFreeMock
+} // namespace EasyMock
 
-#endif // CPP_FREE_MOCK_CPP11_BASIC_TYPE_H_
+#endif // EASYMOCK_CPP11_BASIC_TYPE_H_

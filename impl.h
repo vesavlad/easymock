@@ -1,15 +1,15 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2016 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
 // Check compiler version to include special implement.
 
-#ifndef CPP_FREE_MOCK_IMPL_H_
-#define CPP_FREE_MOCK_IMPL_H_
+#ifndef EASYMOCK_IMPL_H_
+#define EASYMOCK_IMPL_H_
 
 #if __cplusplus >= 201103L
 #include "cpp11/impl.h"
 #endif
 
-#endif // CPP_FREE_MOCK_IMPL_H_
+#endif // EASYMOCK_IMPL_H_

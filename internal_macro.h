@@ -1,16 +1,16 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2016 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
 // This file contains internal macros, used to create a uniq mocker for every function, even they have same type.
 
-#ifndef CPP_FREE_MOCK_INTERNAL_MACRO_H_
-#define CPP_FREE_MOCK_INTERNAL_MACRO_H_
+#ifndef EASYMOCK_INTERNAL_MACRO_H_
+#define EASYMOCK_INTERNAL_MACRO_H_
 
 #include "impl.h"
 
 #define MOCKER_INTERNAL(function, identity) \
-    ::CppFreeMock::MockerCreator::GetMocker<::CppFreeMock::TypeForUniqMocker<identity>>(function, (void*)(function), #function)
+    ::EasyMock::MockerCreator::GetMocker<::EasyMock::TypeForUniqMocker<identity>>(function, (void*)(function), #function)
 
-#endif // CPP_FREE_MOCK_INTERNAL_MACRO_H_
+#endif // EASYMOCK_INTERNAL_MACRO_H_

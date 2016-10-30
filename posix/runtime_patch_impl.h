@@ -1,12 +1,12 @@
-// Copyright 2014 Louix Gu
-// Author: gzc9047@gmail.com (Louix Gu)
+// Copyright 2016 Vlad Vesa
+// Author: hello@vladvesa.ro (Vlad Vesa)
 
-// CppFreeMock: a tool for mock global function, member function, class static function.
+// EasyMock: a tool for mock global function, member function, class static function, virtual member function.
 //
-// Implement CppFreeMock::RuntimePatcherImpl::UnprotectMemory in posix.
+// Implement EasyMock::RuntimePatcherImpl::UnprotectMemory in posix.
 
-#ifndef CPP_FREE_MOCK_POSIX_RUNTIME_PATCH_IMPL_H_
-#define CPP_FREE_MOCK_POSIX_RUNTIME_PATCH_IMPL_H_
+#ifndef EASYMOCK_POSIX_RUNTIME_PATCH_IMPL_H_
+#define EASYMOCK_POSIX_RUNTIME_PATCH_IMPL_H_
 
 #include <cerrno>
 
@@ -14,7 +14,7 @@
 
 #include <sys/mman.h>
 
-namespace CppFreeMock {
+namespace EasyMock {
 
     namespace RuntimePatcherImpl {
         // To be simple, I don't create .cpp for this static value, so you can't include this file in 2 or more cpp file.
@@ -40,6 +40,6 @@ namespace CppFreeMock {
         }
     }
 
-} // namespace CppFreeMock
+} // namespace EasyMock
 
-#endif // CPP_FREE_MOCK_POSIX_RUNTIME_PATCH_IMPL_H_
+#endif // EASYMOCK_POSIX_RUNTIME_PATCH_IMPL_H_
