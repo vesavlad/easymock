@@ -87,7 +87,7 @@ namespace CppFreeMock
                 return gmocker.With(p ...);
             }
 
-            virtual void RestoreToReal() = 0;
+            virtual void disable() = 0;
 
             mutable ::testing::FunctionMocker<R(P...)> gmocker;
             std::vector<char> binaryBackup; // Backup the mockee's binary code changed in RuntimePatcher.
@@ -112,7 +112,7 @@ namespace CppFreeMock
             }
 
             virtual ~Mocker() {
-                RestoreToReal();
+                disable();
             }
 
             void disable() {
@@ -142,9 +142,9 @@ namespace CppFreeMock
             } \
             virtual ~Mocker() \
             { \
-                RestoreToReal(); \
+                disable(); \
             } \
-            virtual void RestoreToReal() \
+            virtual void disable() \
             { \
                 RuntimePatcher::RevertGraft(originFunctionAddress, MockerBase<StubFunctionType>::binaryBackup); \
                 SimpleSingleton<decltype(this)>::getInstance() = nullptr; \
@@ -171,7 +171,7 @@ namespace CppFreeMock
 
             static void RestoreCachedMockFunctionToReal() {
                 for (auto& mocker : getInstance()) {
-                    mocker.second->RestoreToReal();
+                    mocker.second->disable();
                 }
                 getInstance().clear();
             }
