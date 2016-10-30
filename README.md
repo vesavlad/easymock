@@ -22,3 +22,5 @@ TEST(HelloWorld, First) {
     EXPECT_EQ("Hello world.", func());
 }
 ```
+
+For metho info check the [wiki](https://github.com/vesavlad/easymock/wiki)
